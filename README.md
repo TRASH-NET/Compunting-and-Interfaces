@@ -27,10 +27,11 @@ To run the Java projects in this repository, follow these steps:
 
 - Open a terminal or command prompt and Clone the repository using Git:
     - `git clone https://github.com/TRASH-NET/Compunting-and-Interfaces`
+    - `cd Compunting-and-Interfaces`
 
 2.) Choose a Project:
 - Choose the project you want to run of this list of projects:
-    - `temperature_converter `
+    - `temperature_converter`
 - Navigate to the project folder using the following command:
 - `cd project-folder`
 
