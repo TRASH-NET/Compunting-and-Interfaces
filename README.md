@@ -32,6 +32,7 @@ To run the Java projects in this repository, follow these steps:
 2.) Choose a Project:
 - Choose the project you want to run of this list of projects:
     - `temperature_converter`
+    - `agenda_contactos`
 - Navigate to the project folder using the following command:
 - `cd project-folder`
 
