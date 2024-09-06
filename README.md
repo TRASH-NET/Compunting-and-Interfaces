@@ -34,6 +34,7 @@ To run the Java projects in this repository, follow these steps:
     - `temperature_converter`
     - `agenda_contactos`
     - `simulador_de_ventas`
+    - `calculadora_de_series`
 - Navigate to the project folder using the following command:
 - `cd project-folder`
 
