@@ -35,6 +35,7 @@ To run the Java projects in this repository, follow these steps:
     - `agenda_contactos`
     - `simulador_de_ventas`
     - `calculadora_de_series`
+    - `gestor-de-tareas-backend`
 - Navigate to the project folder using the following command:
 - `cd project-folder`
 
