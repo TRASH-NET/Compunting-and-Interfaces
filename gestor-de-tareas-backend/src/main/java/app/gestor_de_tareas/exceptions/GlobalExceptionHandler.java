@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import app.gestor_de_tareas.models.TaskStatus;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
@@ -18,6 +19,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
         String errorMessage = "Validation failed";
+        ErrorResponse errorResponse = new ErrorResponse(errorMessage, ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OverdueTaskStatusChangeException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleOverdueTaskStatusChangeException(OverdueTaskStatusChangeException ex) {
+        String errorMessage = "Constraint violation";
         ErrorResponse errorResponse = new ErrorResponse(errorMessage, ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -39,14 +48,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException ex) {
@@ -65,9 +66,23 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> handleInvalidFieldException(HttpMessageNotReadableException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Validation Failed", "Invalid fields in request", 400);
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        String errorMessage = "Status only can be one of the next values: ";
+        String enumValues = String.join(", ", TaskStatus.getTaskStatuses());
+
+        errorMessage += enumValues;
+
+        ErrorResponse errorResponse = new ErrorResponse("Invalid request", errorMessage,
+                HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

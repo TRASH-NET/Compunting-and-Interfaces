@@ -8,5 +8,6 @@ import app.gestor_de_tareas.models.TaskStatus;
 public class UpdateTaskDto {
     public String title;
     public String description;
+    public String finishDate;
     public TaskStatus status;
 }

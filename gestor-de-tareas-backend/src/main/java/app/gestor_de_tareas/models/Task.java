@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -40,13 +42,18 @@ public class Task {
     @LastModifiedDate
     private Date modificationDate;
 
+    @NotEmpty(message = "Finish date cannot be empty")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String finishDate;
+
     public Task() {
     }
 
-    public Task(String title, String description, TaskStatus status) {
+    public Task(String title, String description, TaskStatus status, String finishDate) {
         this.title = title;
         this.description = description;
         this.status = status;
+        this.finishDate = finishDate;
     }
 
     // ? Getters y Setters
@@ -88,5 +95,13 @@ public class Task {
 
     public Date getModificationDate() {
         return modificationDate;
+    }
+
+    public String getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(String finishDate) {
+        this.finishDate = finishDate;
     }
 }
