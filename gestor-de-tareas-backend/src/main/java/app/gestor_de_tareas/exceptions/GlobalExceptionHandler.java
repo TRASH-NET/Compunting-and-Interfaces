@@ -10,23 +10,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import app.gestor_de_tareas.models.TaskStatus;
-import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(ConstraintException.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
-        String errorMessage = "Validation failed";
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintException ex) {
+        String errorMessage = "Constraint violation";
         ErrorResponse errorResponse = new ErrorResponse(errorMessage, ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(OverdueTaskStatusChangeException.class)
+    @ExceptionHandler(DateException.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> handleOverdueTaskStatusChangeException(OverdueTaskStatusChangeException ex) {
-        String errorMessage = "Constraint violation";
+    public ResponseEntity<ErrorResponse> handleDateException(DateException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid date", ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StatusException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleOverdueTaskStatusChangeException(StatusException ex) {
+        String errorMessage = "Invalid Status";
         ErrorResponse errorResponse = new ErrorResponse(errorMessage, ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -67,13 +74,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        String errorMessage = "Status only can be one of the next values: ";
-        String enumValues = String.join(", ", TaskStatus.getTaskStatuses());
+        String errorMessage;
 
-        errorMessage += enumValues;
+        // solicitud
+        if (ex.getMessage().contains("no content")) {
+            errorMessage = "At least one of these fields must be provided: title, description, status, finishDate";
+        } else if (ex.getMessage().contains(TaskStatus.class.getName())) {
+            String enumValues = String.join(", ", TaskStatus.getTaskStatuses());
+            errorMessage = "Status only can be one of the next values: " + enumValues;
+        } else {
+            errorMessage = "Invalid request body";
+        }
 
         ErrorResponse errorResponse = new ErrorResponse("Invalid request", errorMessage,
                 HttpStatus.BAD_REQUEST.value());
+
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
