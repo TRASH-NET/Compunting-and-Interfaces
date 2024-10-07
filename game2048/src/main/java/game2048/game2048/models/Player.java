@@ -32,7 +32,6 @@ public class Player {
     private int score;
 
     @Min(0)
-    @Column(unique = true, nullable = false)
     private Long rank;
 
     @LastModifiedDate

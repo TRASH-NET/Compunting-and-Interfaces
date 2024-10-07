@@ -38,10 +38,6 @@ public class PlayerService {
         return game2048Repository.findAll();
     }
 
-    public Player updatePlayer(Player player) {
-        return game2048Repository.save(player);
-    }
-
     private void updateAllRanks() {
         List<Player> players = game2048Repository.findAllByOrderByScoreDescLastPlayedAsc();
 
