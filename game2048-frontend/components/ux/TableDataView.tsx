@@ -14,11 +14,11 @@ const TableDataView: React.FC<TableDataViewProps> = ({ fetchPlayers }) => {
     const [searchTerm, setSearchTerm] = useState<string>('');
 
     const getFilteredSortedPlayers = () => {
-        return players
-            .filter(player =>
-                player.playerName.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .sort((a, b) => a.rank - b.rank);
+        return Array.isArray(players)
+            ? players
+                .filter(player => player.playerName.toLowerCase().includes(searchTerm.toLowerCase()))
+                .sort((a, b) => a.rank - b.rank)
+            : []
     };
 
     useEffect(() => {

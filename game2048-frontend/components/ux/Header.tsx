@@ -7,9 +7,10 @@ interface HeaderProps {
     gameEnded: boolean;
     resetGame: () => void;
     startGame: () => void;
+    sesion: string | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ board, isPlaying, gameEnded, resetGame, startGame }) => {
+const Header: React.FC<HeaderProps> = ({ board, isPlaying, gameEnded, resetGame, startGame, sesion }) => {
 
     return (
         <div className="flex flex-col px-4 mb-4">
@@ -26,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({ board, isPlaying, gameEnded, resetGame,
                     gameEnded={gameEnded}
                     resetGame={resetGame}
                     startGame={startGame}
+                    sesion={sesion}
                 />
 
             </div>

@@ -4,8 +4,12 @@ import Header from './Header'
 import BoardView from './BoardView'
 import { Board } from '@/models/Game2048'
 
+interface GameProps {
+    sesion: string | null;
+}
 
-const Game = () => {
+
+const Game: React.FC<GameProps> = ({ sesion }) => {
 
     const [board, setBoard] = useState<Board | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -31,6 +35,7 @@ const Game = () => {
                 gameEnded={gameEnded}
                 resetGame={resetGame}
                 startGame={startGame}
+                sesion={sesion}
             />
             {board && (
                 <BoardView

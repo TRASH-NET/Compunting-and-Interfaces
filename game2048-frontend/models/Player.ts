@@ -1,28 +1,50 @@
-import { Player } from "@/Interfaces/player.interface";
+import { IMatch } from "@/Interfaces";
+import { UUID } from "crypto";
 
-export const createPlayer = async (player: Player) => {
-
+export const saveMatch = async (match: IMatch) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/create`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/save-match`, {
             method: 'POST',
+            body: JSON.stringify(match),
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(player)
+            credentials: 'include'
         });
 
-        return response.json();
+        const data = await response.json();
 
+        if (!response.ok) {
+            throw { status: response.status, message: data.message };
+        }
+        return data;
     } catch (error) {
-        throw new Error(`Error creating player: ${error}`);
+        throw error;
     }
+
 }
 
-export const getplayers = async () => {
+export const getMatchHistory = async (playerId: UUID | null) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, { cache: 'no-store' });
-        return response.json();
+        if (!playerId) {
+            return;
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/match-history/${playerId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw { status: response.status, message: data.message };
+        }
+        return data;
     } catch (error) {
-        throw new Error(`Error fetching players: ${error}`);
+        throw error;
     }
-}
+} 

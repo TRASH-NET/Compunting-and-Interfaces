@@ -11,7 +11,7 @@ import { formatDate } from "@/utils/formatDate";
 
 
 interface RankingTableProps {
-    players: PlayerSaved[];
+    players: PlayerSaved[] | string;
 }
 
 const RankingTable: React.FC<RankingTableProps> = ({ players }) => {
@@ -26,17 +26,19 @@ const RankingTable: React.FC<RankingTableProps> = ({ players }) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {players.map((player) => (
-                    <TableRow key={player.playerId}>
+                {
+                    // players === typeof Array ? players.map((player) => (
+                    //     <TableRow key={player.playerId}>
 
-                        <TableCell>
-                            {player.rank === 1 ? '🥇' : player.rank === 2 ? '🥈' : player.rank === 3 ? '🥉' : player.rank}
-                        </TableCell>
-                        <TableCell>{player.playerName}</TableCell>
-                        <TableCell>{player.score}</TableCell>
-                        <TableCell>{formatDate(player.lastPlayed)}</TableCell>
-                    </TableRow>
-                ))}
+                    //         <TableCell>
+                    //             {player.rank === 1 ? '🥇' : player.rank === 2 ? '🥈' : player.rank === 3 ? '🥉' : player.rank}
+                    //         </TableCell>
+                    //         <TableCell>{player.playerName}</TableCell>
+                    //         <TableCell>{player.score}</TableCell>
+                    //         <TableCell>{formatDate(player.lastPlayed)}</TableCell>
+                    //     </TableRow>
+                    // )) : players
+                }
             </TableBody>
         </Table>
     )
