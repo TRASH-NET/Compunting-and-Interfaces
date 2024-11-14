@@ -57,6 +57,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
         defaultValues: task ? task : { title: '', description: '', finishDate: '', status: 'TODO' },
     });
 
+    const today = new Date();
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -119,8 +121,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSubmit }) => {
                                             const formattedDate = date ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : '';
                                             field.onChange(formattedDate);
                                         }}
-                                        disabled={{ before: new Date() }}
-                                        initialFocus
+                                        disabled={date => date <= today}
+                                    // initialFocus
                                     />
                                 </PopoverContent>
                             </Popover>

@@ -151,7 +151,13 @@ public class TaskService {
     private boolean isOverdue(String finishDateString) {
         try {
             Date finishDate = dateFormat.parse(finishDateString);
-            return finishDate.before(new Date());
+            
+            if(finishDate.before(new Date()) || finishDate.equals(new Date())){
+                return true;
+            }
+
+            return false;
+
         } catch (ParseException e) {
             throw new DateException("finishDate must be in the format: " + DATE_FORMAT);
         }
