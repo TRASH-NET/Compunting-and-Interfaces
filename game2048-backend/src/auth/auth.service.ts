@@ -83,6 +83,10 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 			const { password: __, ...player } = validateUserExist;
 			const token = await this.signJWT(player);
 
+			await this.activeToken.create({
+				data: { token },
+			});
+
 			return {
 				player,
 				token
@@ -91,6 +95,20 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
 		} catch (error) {
 			throw new HttpException(error.message, 400);
+		}
+	}
+
+	async logout(token: string) {
+		try {
+			await this.activeToken.delete({
+				where: {
+					token: token,
+				},
+			});
+
+			return { message: 'Logout successful' };
+		} catch {
+			throw new HttpException('Error while logging out', 400);
 		}
 	}
 
@@ -105,13 +123,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 	async verifyToken(token: string) {
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { iat, exp, ...player } = this.jwtService.verify(token, {
+			const { iat, exp, ...user } = this.jwtService.verify(token, {
 				secret: envs.jwtSecret
 			});
 
-			return {
-				token: await this.signJWT(player)
-			};
+			return { user };
 		} catch (error) {
 			throw new HttpException(error.message, 401);
 		}

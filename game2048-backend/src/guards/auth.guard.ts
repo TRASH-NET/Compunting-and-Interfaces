@@ -22,10 +22,15 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException('Token not found');
         }
         try {
+            const activeToken = await this.authService.activeToken.findUnique({
+                where: { token: token },
+            });
 
-            const { token: newToken } = await this.authService.verifyToken(token);
-            request['token'] = newToken;
+            if (!activeToken) {
+                throw new UnauthorizedException('Token is no longer valid');
+            }
 
+            request['token'] = token;
         } catch {
             throw new UnauthorizedException('Invalid token');
         }

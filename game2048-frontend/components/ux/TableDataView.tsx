@@ -2,28 +2,47 @@
 import React, { useEffect, useState } from 'react'
 import RankingTable from './RankingTable'
 import { Input } from '../ui/input'
-import { PlayerSaved } from '@/Interfaces/player.interface';
+import { IMatchHistory, IRanking } from '@/Interfaces';
 
 interface TableDataViewProps {
-    fetchPlayers: PlayerSaved[];
+    tableData: IMatchHistory[] | IRanking[];
+    type: 'ranking' | 'history';
 }
 
-const TableDataView: React.FC<TableDataViewProps> = ({ fetchPlayers }) => {
+const TableDataView: React.FC<TableDataViewProps> = ({ tableData, type }) => {
 
-    const [players, setPlayers] = useState<PlayerSaved[]>(fetchPlayers);
+    const [data, setData] = useState<typeof tableData>(tableData);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
-    const getFilteredSortedPlayers = () => {
-        return Array.isArray(players)
-            ? players
-                .filter(player => player.playerName.toLowerCase().includes(searchTerm.toLowerCase()))
-                .sort((a, b) => a.rank - b.rank)
-            : []
+    const getFilteredSortedData = () => {
+        if (!Array.isArray(data)) return [];
+
+        return data
+            .filter(item => {
+                if (type === 'history') {
+                    return true;
+                }
+                if (type === 'ranking') {
+                    const playerName = (item as IRanking).playerName;
+                    return playerName && playerName.toLowerCase().includes(searchTerm.toLowerCase());
+                }
+                return true;
+            })
+            .sort((a, b) => {
+                if (type === 'ranking') {
+                    return (b as IRanking).bestScore - (a as IRanking).bestScore;
+                }
+                if (type === 'history') {
+                    return (b as IMatchHistory).score - (a as IMatchHistory).score;
+                }
+
+                return 0;
+            });
     };
 
     useEffect(() => {
-        setPlayers(fetchPlayers);
-    }, [fetchPlayers]);
+        setData(tableData);
+    }, [tableData]);
 
     return (
         <>
@@ -35,10 +54,10 @@ const TableDataView: React.FC<TableDataViewProps> = ({ fetchPlayers }) => {
             />
             <div className='w-full bg-[#c7c7c7] my-2 rounded-md overflow-y-auto h-[400px]'>
                 <RankingTable
-                    players={getFilteredSortedPlayers()}
+                    data={getFilteredSortedData()}
+                    type={type}
                 />
             </div>
-
         </>
     )
 }

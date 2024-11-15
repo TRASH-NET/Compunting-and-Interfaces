@@ -13,6 +13,12 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model ActiveToken {
+    id        String   @id @default(cuid())
+    token     String   @unique
+    createdAt DateTime @default(now())
+}
+
 model Game {
     id        Int      @id @default(autoincrement())
     score     Int
@@ -25,7 +31,8 @@ model Player {
     id          String   @id @default(uuid())
     playerName  String   @unique
     password    String
-    rank        Int?
+    rank        Int?     @unique
+    bestScore   Int?     @default(0)
     gameHistory Game[]
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt

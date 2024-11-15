@@ -47,4 +47,29 @@ export const getMatchHistory = async (playerId: UUID | null) => {
     } catch (error) {
         throw error;
     }
-} 
+}
+
+export const getBestScore = async (playerId: UUID | null) => {
+    try {
+        if (!playerId) {
+            return;
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/best-score/${playerId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw { status: response.status, message: data.message };
+        }
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -56,10 +56,27 @@ export const register = async (user: IUser) => {
         if (!response.ok) {
             throw { status: response.status, message: data.message };
         }
-        console.log(data)
         return data;
     } catch (error) {
-        console.log(error)
         throw error;
     }
-}   
+}
+
+export const logout = async (token: string | null) => {
+    try {
+
+        if (!token) return;
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}

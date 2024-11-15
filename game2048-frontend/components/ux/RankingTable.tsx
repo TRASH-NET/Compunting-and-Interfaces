@@ -6,39 +6,64 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { PlayerSaved } from "@/Interfaces/player.interface";
+import { IMatchHistory, IRanking } from "@/Interfaces";
 import { formatDate } from "@/utils/formatDate";
 
 
 interface RankingTableProps {
-    players: PlayerSaved[] | string;
+    data: (IMatchHistory | IRanking)[];
+    type: 'ranking' | 'history';
 }
 
-const RankingTable: React.FC<RankingTableProps> = ({ players }) => {
+const RankingTable: React.FC<RankingTableProps> = ({ data, type }) => {
     return (
         <Table>
             <TableHeader>
-                <TableRow >
+                <TableRow>
                     <TableHead className="font-bold text-[#b81c64]">#</TableHead>
-                    <TableHead className="font-bold text-[#b81c64]">Nick Name</TableHead>
+                    {
+                        type === 'ranking' && (
+                            <TableHead className="font-bold text-[#b81c64]">Usuario</TableHead>
+                        )
+                    }
                     <TableHead className="font-bold text-[#b81c64]">Score</TableHead>
-                    <TableHead className="font-bold text-[#b81c64]">Ultimo jugado</TableHead>
+                    <TableHead className="font-bold text-[#b81c64]">
+                        {type === 'ranking' ? 'Último jugado' : 'Fecha'}
+                    </TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {
-                    // players === typeof Array ? players.map((player) => (
-                    //     <TableRow key={player.playerId}>
-
-                    //         <TableCell>
-                    //             {player.rank === 1 ? '🥇' : player.rank === 2 ? '🥈' : player.rank === 3 ? '🥉' : player.rank}
-                    //         </TableCell>
-                    //         <TableCell>{player.playerName}</TableCell>
-                    //         <TableCell>{player.score}</TableCell>
-                    //         <TableCell>{formatDate(player.lastPlayed)}</TableCell>
-                    //     </TableRow>
-                    // )) : players
-                }
+                {data.map((item, index) => (
+                    <TableRow key={type === 'ranking'
+                        ? (item as IRanking).playerName
+                        : `${(item as IMatchHistory).playerId}-${index}`}>
+                        {type === 'ranking' ? (
+                            <TableCell>
+                                {(item as IRanking).rank === 1 ? '🥇' : (item as IRanking).rank === 2 ? '🥈' : (item as IRanking).rank === 3 ? '🥉' : (item as IRanking).rank}
+                            </TableCell>
+                        ) : (
+                            <TableCell>{index + 1}</TableCell>
+                        )
+                        }
+                        {
+                            type === 'ranking' && (
+                                <TableCell>{(item as IRanking).playerName}</TableCell>
+                            )
+                        }
+                        {
+                            type === 'ranking' ? (
+                                <TableCell>{(item as IRanking).bestScore}</TableCell>
+                            ) : (
+                                <TableCell>{(item as IMatchHistory).score}</TableCell>
+                            )
+                        }
+                        <TableCell>{formatDate(
+                            type === 'ranking'
+                                ? (item as IRanking).updatedAt
+                                : (item as IMatchHistory).matchDate
+                        )}</TableCell>
+                    </TableRow>
+                ))}
             </TableBody>
         </Table>
     )

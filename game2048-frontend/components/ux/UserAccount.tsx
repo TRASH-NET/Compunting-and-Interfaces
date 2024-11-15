@@ -11,6 +11,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { logout } from '@/models/auth';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -21,6 +23,18 @@ interface UserAccountProps {
 const UserAccount: React.FC<UserAccountProps> = ({ sesion }) => {
 
     const decodeToken: IJwtPayload | null = sesion ? jwtDecode(sesion) : null;
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        try {
+            if (sesion) {
+                await logout(sesion);
+                router.push('/auth/login');
+            }
+        } catch (error) {
+            console.error('Error al cerrar sesión', error);
+        }
+    }
 
     return (
         <>
@@ -38,18 +52,9 @@ const UserAccount: React.FC<UserAccountProps> = ({ sesion }) => {
                     <DropdownMenuLabel>{decodeToken?.playerName}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem className='hover:cursor-pointer'>
-                            <span>Profile</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='hover:cursor-pointer'>
-                            <span>Billing</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='hover:cursor-pointer'>
-                            <span className='text-[#f00]'>Eliminar cuenta</span>
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                             className='hover:cursor-pointer'
-                            onClick={() => { }}
+                            onClick={handleLogout}
                         >
                             <span>Cerrar Sesion</span>
                         </DropdownMenuItem>

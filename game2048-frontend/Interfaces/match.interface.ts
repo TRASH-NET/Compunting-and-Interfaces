@@ -11,3 +11,11 @@ export interface IMatchHistory {
     playerId: UUID;
     matchDate: Date;
 }
+
+export interface IRanking {
+    id: UUID
+    playerName: string;
+    bestScore: number;
+    updatedAt: Date;
+    rank: number;
+}

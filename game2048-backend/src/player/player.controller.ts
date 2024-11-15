@@ -16,6 +16,15 @@ export class PlayerController {
 	@Get('match-history/:playerId')
 	getGamesHistory(@Param('playerId', ParseUUIDPipe) playerId: UUID) {
 		return this.playerService.getGamesHistory(playerId);
+	}
 
+	@Get('best-score/:playerId')
+	getBestScore(@Param('playerId', ParseUUIDPipe) playerId: UUID) {
+		return this.playerService.getBestScore(playerId);
+	}
+
+	@Get('ranking')
+	getRanking() {
+		return this.playerService.getRanking();
 	}
 }
