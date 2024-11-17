@@ -22,7 +22,6 @@ export class AuthController {
 
 			res.cookie('authentication', token, {
 				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
 				sameSite: 'none',
 				expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 			});
