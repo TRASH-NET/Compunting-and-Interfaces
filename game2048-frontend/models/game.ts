@@ -1,6 +1,6 @@
 export const getRanking = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/ranking`, {
+        const response = await fetch(`${process.env.API_URL}/player/ranking`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

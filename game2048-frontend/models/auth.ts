@@ -2,7 +2,7 @@ import { IUser } from "@/Interfaces/user.interface";
 
 export const verifyToken = async (token: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
+        const response = await fetch(`${process.env.API_URL}/auth/verify`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export const verifyToken = async (token: string) => {
 
 export const login = async (user: IUser) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        const response = await fetch(`${process.env.API_URL}/auth/login`, {
             method: 'POST',
             body: JSON.stringify(user),
             headers: {
@@ -42,7 +42,7 @@ export const login = async (user: IUser) => {
 
 export const register = async (user: IUser) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        const response = await fetch(`${process.env.API_URL}/auth/register`, {
             method: 'POST',
             body: JSON.stringify(user),
             headers: {
@@ -67,7 +67,7 @@ export const logout = async (token: string | null) => {
 
         if (!token) return;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        const response = await fetch(`${process.env.API_URL}/auth/logout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
