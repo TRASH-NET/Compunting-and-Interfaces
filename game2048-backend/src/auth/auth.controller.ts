@@ -22,6 +22,7 @@ export class AuthController {
 
 			res.cookie('authentication', token, {
 				httpOnly: true,
+				secure: true,
 				sameSite: 'none',
 				expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 			});
