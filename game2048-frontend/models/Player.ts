@@ -3,7 +3,7 @@ import { UUID } from "crypto";
 
 export const saveMatch = async (match: IMatch) => {
     try {
-        const response = await fetch(`${process.env.API_URL}/player/save-match`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/save-match`, {
             method: 'POST',
             body: JSON.stringify(match),
             headers: {
@@ -30,7 +30,7 @@ export const getMatchHistory = async (playerId: UUID | null) => {
             return;
         }
 
-        const response = await fetch(`${process.env.API_URL}/player/match-history/${playerId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/match-history/${playerId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ export const getBestScore = async (playerId: UUID | null) => {
             return;
         }
 
-        const response = await fetch(`${process.env.API_URL}/player/best-score/${playerId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/player/best-score/${playerId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
