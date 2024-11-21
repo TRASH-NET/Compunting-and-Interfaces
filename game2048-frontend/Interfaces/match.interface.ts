@@ -16,6 +16,6 @@ export interface IRanking {
     id: UUID
     playerName: string;
     bestScore: number;
-    updatedAt: Date;
+    lastPlayed: Date;
     rank: number;
 }

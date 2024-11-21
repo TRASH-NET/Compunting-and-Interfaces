@@ -16,6 +16,10 @@ interface RankingTableProps {
 }
 
 const RankingTable: React.FC<RankingTableProps> = ({ data, type }) => {
+
+    {
+        console.log(data)
+    }
     return (
         <Table>
             <TableHeader>
@@ -59,7 +63,7 @@ const RankingTable: React.FC<RankingTableProps> = ({ data, type }) => {
                         }
                         <TableCell>{formatDate(
                             type === 'ranking'
-                                ? (item as IRanking).updatedAt
+                                ? (item as IRanking).lastPlayed
                                 : (item as IMatchHistory).matchDate
                         )}</TableCell>
                     </TableRow>

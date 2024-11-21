@@ -20,17 +20,16 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 
 
 	async saveMatch(saveMatchDto: SaveMatchDto) {
-
 		const { playerId, score } = saveMatchDto;
 
 		try {
-
 			const newMatch = await this.game.create({
 				data: {
 					playerId,
 					score,
-				}
-			})
+				},
+			});
+
 			const player = await this.player.findUnique({
 				where: { id: playerId },
 			});
@@ -42,7 +41,17 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 			if (score > (player.bestScore ?? 0)) {
 				await this.player.update({
 					where: { id: playerId },
-					data: { bestScore: score },
+					data: {
+						bestScore: score,
+						lastPlayed: new Date(),
+					},
+				});
+			} else {
+				await this.player.update({
+					where: { id: playerId },
+					data: {
+						lastPlayed: new Date(),
+					},
 				});
 			}
 
@@ -50,8 +59,7 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 
 			return {
 				newMatch,
-			}
-
+			};
 		} catch (error) {
 			throw new HttpException(error.message, 400);
 		}
@@ -64,20 +72,32 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 					id: true,
 					bestScore: true,
 					updatedAt: true,
+					createdAt: true,
 				},
 				orderBy: [
 					{ bestScore: 'desc' },
 					{ updatedAt: 'desc' },
+					{ createdAt: 'asc' },
 				],
 			});
 
-			for (let rank = 1; rank <= players.length; rank++) {
-				const player = players[rank - 1];
-				await this.player.update({
-					where: { id: player.id },
-					data: { rank },
-				});
-			}
+			await this.$transaction(
+				players.map((player, index) =>
+					this.player.update({
+						where: { id: player.id },
+						data: { rank: -(index + 1) },
+					})
+				)
+			);
+
+			await this.$transaction(
+				players.map((player, index) =>
+					this.player.update({
+						where: { id: player.id },
+						data: { rank: index + 1 },
+					})
+				)
+			);
 
 			this.logger.log('Rank recalculated successfully');
 		} catch (error) {
@@ -85,6 +105,7 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 			throw new HttpException('Error recalculating rank', 500);
 		}
 	}
+
 
 	async getGamesHistory(playerId: UUID) {
 
@@ -129,7 +150,7 @@ export class PlayerService extends PrismaClient implements OnModuleInit {
 					id: true,
 					playerName: true,
 					bestScore: true,
-					updatedAt: true,
+					lastPlayed: true,
 					rank: true,
 				},
 				orderBy: { rank: 'asc' },

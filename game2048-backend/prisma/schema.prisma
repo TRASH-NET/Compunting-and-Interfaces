@@ -28,12 +28,13 @@ model Game {
 }
 
 model Player {
-    id          String   @id @default(uuid())
-    playerName  String   @unique
+    id          String    @id @default(uuid())
+    playerName  String    @unique
     password    String
-    rank        Int?     @unique
-    bestScore   Int?     @default(0)
+    rank        Int?      @unique
+    bestScore   Int?      @default(0)
     gameHistory Game[]
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    lastPlayed  DateTime?
 }

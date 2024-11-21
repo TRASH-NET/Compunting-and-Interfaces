@@ -42,6 +42,8 @@ interface BoardViewProps {
 
 const BoardView = ({ board, setBoard, resetGame, setGameEnded }: BoardViewProps) => {
 
+
+
     const handleKeyDown = (event: KeyDownEvent) => {
         if (board?.hasWon()) {
             return;

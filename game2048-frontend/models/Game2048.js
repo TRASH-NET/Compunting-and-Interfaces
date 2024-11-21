@@ -80,6 +80,10 @@ class Board {
 		this.tiles.push(res);
 		return res;
 	}
+	playSound = (soundName) => {
+		const sound = new Audio(`/${soundName}.mp3`);
+		sound.play();
+	};
 
 	moveLeft() {
 		var hasChanged = false;
@@ -98,12 +102,19 @@ class Board {
 					tile2.mergedInto = targetTile;
 					targetTile.value += tile2.value;
 					this.score += tile1.value + tile2.value;
+
+					this.playSound('merge');
+
 				}
 				resultRow[target] = targetTile;
 				this.won |= targetTile.value === 2048;
 				hasChanged |= targetTile.value !== this.cells[row][target].value;
 			}
 			this.cells[row] = resultRow;
+		}
+
+		if (hasChanged) {
+			this.playSound('moverficha');
 		}
 		return hasChanged;
 	}
@@ -159,6 +170,7 @@ class Board {
 	}
 	hasLost() {
 		var canMove = false;
+
 		for (var row = 0; row < this.size; ++row) {
 			for (var column = 0; column < this.size; ++column) {
 				canMove |= this.cells[row][column].value === 0;
@@ -179,6 +191,10 @@ class Board {
 				}
 			}
 		}
+		if (!canMove) {
+			this.playSound('gameover');
+		}
+
 		return !canMove;
 	}
 }

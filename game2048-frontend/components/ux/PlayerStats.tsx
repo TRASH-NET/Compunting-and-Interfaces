@@ -18,13 +18,13 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ matchHistory, rankingData, be
         <>
             <div className='flex justify-evenly w-full'>
                 <Button
-                    variant={activeTab === 'ranking' ? "default" : "outline"}
+                    variant={activeTab === 'ranking' ? "game" : "outline"}
                     onClick={() => setActiveTab('ranking')}
                 >
                     Ranking
                 </Button>
                 <Button
-                    variant={activeTab === 'history' ? "default" : "outline"}
+                    variant={activeTab === 'history' ? "game" : "outline"}
                     onClick={() => setActiveTab('history')}
                 >
                     Mis partidas
@@ -33,7 +33,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ matchHistory, rankingData, be
             <h2 className='font-bold text-center my-4 text-xl'>
                 {activeTab === 'ranking' ? 'Ranking Global' : 'Historial de partidas'}
             </h2>
-            <h3>BEST SCORE: {bestScore}</h3>
+            <h3 className="p-4">BEST SCORE: <span className="p-2 rounded-md text-white font-bold bg-[#b81c64]">{bestScore}</span></h3>
             <TableDataView
                 tableData={activeTab === 'ranking' ? rankingData : matchHistory}
                 type={activeTab}
